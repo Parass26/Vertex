@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pallette - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+        }
+        .logo {
+            margin-top: 20px;
+            width: 150px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .home-container {
+            display: none;
+            text-align: center;
+            width: 80%;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .art-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .art-card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .art-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+        }
+        .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #007BFF;
+        }
+        .comment-box {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            display: none;
+        }
+        .like-count, .comment-count {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+        .comment-list {
+            display: none;
+            text-align: left;
+            font-size: 14px;
+            margin-top: 5px;
+            color: #333;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <img src="WhatsApp Image 2025-02-15 at 19.43.57_351abf17.jpg" alt="Pallette Logo" class="logo">
+    <div class="container" id="loginPage">
+        <h2>Login to Pallette</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <button onclick="showSignup()">Create Account</button>
+    </div>
+
+    <div class="home-container" id="homePage">
+        <input type="text" class="search-bar" id="search" placeholder="Search artwork..." oninput="searchArtworks()">
+        <h2>Welcome to Pallette</h2>
+        <div class="art-grid" id="artGrid"></div>
+    </div>
+
+    <script>
+        let users = [];
+        let likes = {};
+        let comments = {};
+        let artworks = [
+            { id: "art1", name: "Sunset", src: "art1.jpg" },
+            { id: "art2", name: "Mountain", src: "art2.jpg" },
+            { id: "art3", name: "Cityscape", src: "art3.jpg" },
+            { id: "art4", name: "Forest", src: "art4.jpg" }
+        ];
+        
+        function login() {
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("homePage").style.display = "block";
+            renderArtworks(artworks);
+        }
+        
+        function renderArtworks(filteredArtworks) {
+            const artGrid = document.getElementById("artGrid");
+            artGrid.innerHTML = filteredArtworks.map(({ id, name, src }) => `
+                <div class='art-card' id='${id}'>
+                    <img src='${src}' alt='${name}'>
+                    <h3>${name}</h3>
+                    <div class='actions'>
+                        <button onclick="toggleLike('${id}')">👍 Like</button>
+                        <button onclick="toggleCommentBox('${id}')">💬 Comment</button>
+                    </div>
+                    <span class='like-count' id='likeCount-${id}'>0 Likes</span>
+                    <textarea class='comment-box' id='commentBox-${id}' placeholder='Write a comment...'></textarea>
+                    <button onclick="submitComment('${id}')">Submit</button>
+                    <span class='comment-count' id='commentCount-${id}' onclick="showComments('${id}')">0 Comments</span>
+                    <div class='comment-list' id='commentList-${id}'></div>
+                </div>
+            `).join('');
+        }
+        
+        function toggleLike(id) {
+            if (!likes[id]) likes[id] = 0;
+            likes[id] = likes[id] === 0 ? 1 : 0;
+            document.getElementById(likeCount-${id}).innerText = ${likes[id]} Likes;
+        }
+
+        function toggleCommentBox(id) {
+            document.getElementById(commentBox-${id}).style.display = "block";
+        }
+
+        function submitComment(id) {
+            const commentBox = document.getElementById(commentBox-${id});
+            if (!comments[id]) comments[id] = [];
+            if (commentBox.value.trim()) {
+                comments[id].push(commentBox.value);
+                document.getElementById(commentCount-${id}).innerText = ${comments[id].length} Comments;
+                commentBox.value = "";
+            }
+        }
+
+        function showComments(id) {
+            const commentList = document.getElementById(commentList-${id});
+            commentList.innerHTML = comments[id] ? comments[id].map(c => <p>${c}</p>).join('') : "No comments yet";
+            commentList.style.display = commentList.style.display === "none" ? "block" : "none";
+        }
+    </script>
+</body>
+</html>
